@@ -18,12 +18,12 @@ var postgres = new Database();
 
 //Get BYS=================================================================================================
 //GET BY CLIENT IDENTITY NUMBER=========================================================================
-router.get('/getById/:userId', (req, res, next) => {
+router.get('/getIdNumber/:userId', (req, res, next) => {
 
     res.header("Access-Control-Allow-Origin","*");
     res.header("Access-Control_Allow-Headers","Origin,X-Requested-With,Content-Type,Accept");
 
-    const functionName = `booking_system.fn_client_get_by_id(${req.params.userId})`;
+    const functionName = `online_book.fn_view_all_client_vehicle(${req.params.userId})`;
 
         postgres.callFnWithResultsById(functionName)  
             .then((data) => {
@@ -44,18 +44,19 @@ router.get('/getById/:userId', (req, res, next) => {
             }))
 
 });
-//GET BY CLIENT ID=========================================================================================
-router.get('/getByUserId/:userId', (req, res, next) => {
+
+//GET BY CLIENT NUMBER=========================================================================
+router.get('/getUserId/:userId', (req, res, next) => {
 
     res.header("Access-Control-Allow-Origin","*");
     res.header("Access-Control_Allow-Headers","Origin,X-Requested-With,Content-Type,Accept");
 
-    const functionName = `booking_system.fn_vehicle_get_all(${req.params.userId})`;
+    const functionName = `online_book.fn_get_client_app (${req.params.userId})`;
 
         postgres.callFnWithResultsById(functionName)  
             .then((data) => {
                 res.status(200).json({
-                    message: 'YOU FOUND THE USER',
+                    message: 'You discovered a Car',
                     user: data,
                     status: true
                 });
@@ -69,23 +70,20 @@ router.get('/getByUserId/:userId', (req, res, next) => {
                     status: false
                 });
             }))
-
-   
-
 
 });
-//Get INSPECTIONS===================================================================================
-router.get('/getInspections/:userId', (req, res, next) => {
+//GET CLIENT APPOINTMENTS NUMBER=========================================================================
+router.get('/getClientAppointments/:userId', (req, res, next) => {
 
     res.header("Access-Control-Allow-Origin","*");
     res.header("Access-Control_Allow-Headers","Origin,X-Requested-With,Content-Type,Accept");
 
-    const functionName = `booking_system.fn_vehicle_get_all(${req.params.userId})`;
+    const functionName = `online_book.fn_get_client_app(${req.params.userId})`;
 
         postgres.callFnWithResultsById(functionName)  
             .then((data) => {
                 res.status(200).json({
-                    message: 'YOU FOUND THE USER',
+                    message: 'You discovered a Car',
                     user: data,
                     status: true
                 });
@@ -99,24 +97,21 @@ router.get('/getInspections/:userId', (req, res, next) => {
                     status: false
                 });
             }))
-
-   
-
 
 });
-//Get BOOKED iNSPECTION===================================================================================
-router.get('/getBooking/:userId', (req, res, next) => {
+//GET APPOINTMENTS FOR A TECHICIAN=========================================================================
+router.get('/techAppointments/:userId', (req, res, next) => {
 
     res.header("Access-Control-Allow-Origin","*");
     res.header("Access-Control_Allow-Headers","Origin,X-Requested-With,Content-Type,Accept");
 
-    const functionName = `booking_system.fn_inspection_get_by_id(${req.params.userId})`;
+    const functionName = `online_book.fn_get_all_appointments(${req.params.userId})`;
 
         postgres.callFnWithResultsById(functionName)  
             .then((data) => {
                 res.status(200).json({
-                    message: 'Here are your bookings',
-                    user: data,
+                    message: 'Here are your appointments',
+                    appointments: data,
                     status: true
                 });
             })
@@ -129,10 +124,47 @@ router.get('/getBooking/:userId', (req, res, next) => {
                     status: false
                 });
             }))
+
+});
+
+
+//GET ALL REQUESTED APPOINTMENTS=========================================================================
+router.get('/getRequestedApp', (req, res,next) => {
+    res.header("Access-Control-Allow-Origin","*");
+    res.header("Access-Control_Allow-Headers","Origin,X-Requested-With,Content-Type,Accept");
+   
+ debugger;
+
+    const functionName = `online_book.fn_get_unapproved_appointments`;
+
+    return new Promise((resolve, reject) => {
+
+        postgres.functionWithResults(functionName)
+            .then((data) => {
+                debugger;
+                res.status(200).json({
+                    message: 'Here is all appointments',
+                    appointments: data,
+                    status: true
+                });
+                resolve(data);
+
+            })
+            .catch((error => {
+                debugger;
+                res.status(500).json({
+                    message: 'bad Request',
+                    error: error,
+                    status: false
+                });
+                reject(error);
+            }))
+
+    })
 });
 //================================================================================================================
 //REGISTER USERS========================================================================================
-router.post('/addNewClient/', (req, res, next) => {
+router.post('/addNewUser/', (req, res, next) => {
     res.header("Access-Control-Allow-Origin","*");
     res.header("Access-Control_Allow-Headers","Origin,X-Requested-With,Content-Type,Accept");
 
@@ -153,7 +185,7 @@ router.post('/addNewClient/', (req, res, next) => {
 
         placeholder = placeholder.replace(/,\s*$/, ''); 
 
-        const functionName = `booking_system.fn_client_add`;
+        const functionName = `online_book.fn_user_add`;
 
         const sql = `${functionName}(${placeholder})`;
 
@@ -178,8 +210,8 @@ router.post('/addNewClient/', (req, res, next) => {
         })
     })
 });
-//MAKE  INSTALLATION BOOKING================================================================================
-router.post('/clientAddBooking/', (req, res, next) => {
+//REGISTER FILL IN INSEPECTION ========================================================================================
+router.post('/addNewUser/', (req, res, next) => {
     res.header("Access-Control-Allow-Origin","*");
     res.header("Access-Control_Allow-Headers","Origin,X-Requested-With,Content-Type,Accept");
 
@@ -200,7 +232,7 @@ router.post('/clientAddBooking/', (req, res, next) => {
 
         placeholder = placeholder.replace(/,\s*$/, ''); 
 
-        const functionName = `booking_system.fn_installation_add`;
+        const functionName = `online_book.fn_user_add`;
 
         const sql = `${functionName}(${placeholder})`;
 
@@ -208,7 +240,7 @@ router.post('/clientAddBooking/', (req, res, next) => {
         .then((data) => {
             debugger;
             res.status(201).json({
-                message: 'Successfully requested Inspection',
+                message: 'Successfully Added user',
                 addedUser: data
             });
             resolve(data);
@@ -225,35 +257,9 @@ router.post('/clientAddBooking/', (req, res, next) => {
         })
     })
 });
-//MAKE  INSPECTION BOOKING================================================================================
-router.post('/bookInspection/:vecId', (req, res, next) => {
-    res.header("Access-Control-Allow-Origin","*");
-    res.header("Access-Control_Allow-Headers","Origin,X-Requested-With,Content-Type,Accept");
-
-    const functionName = `booking_system.fn_inspection_add(${req.body.vecId})`;
-
-        postgres.callFnWithResultsById(functionName)  
-            .then((data) => {
-                res.status(200).json({
-                    message: 'You successfully requested an Inspection',
-                    user: data,
-                    status: true
-                });
-            })
-            .catch((error => {
-                debugger;
-                console.log(error);
-                res.status(500).json({
-                    message: 'bad Request',
-                    error: error,
-                    status: false
-                });
-            }))
-
-});
-//==========================================================================================================
-//CANCEL INSPECTION BOOKING================================================================================
-router.put('/cancelBooking/', (req, res, next) => {
+//================================================================================================================
+//TECHNICIAN APPROVE APPOINTMENTS=================================================================================
+router.put('/approveAppointments', (req, res, next) => {
     res.header("Access-Control-Allow-Origin","*");
     res.header("Access-Control_Allow-Headers","Origin,X-Requested-With,Content-Type,Accept");
 
@@ -274,7 +280,7 @@ router.put('/cancelBooking/', (req, res, next) => {
 
         placeholder = placeholder.replace(/,\s*$/, ''); 
 
-        const functionName = `booking_system.fn_inspection_delete`;
+        const functionName = `online_book.fn_appointment_approve`;
 
         const sql = `${functionName}(${placeholder})`;
 
@@ -282,7 +288,7 @@ router.put('/cancelBooking/', (req, res, next) => {
         .then((data) => {
             debugger;
             res.status(201).json({
-                message: 'Successfully deleted Inspection',
+                message: 'Successfully Updated user',
                 addedUser: data
             });
             resolve(data);
@@ -299,5 +305,4 @@ router.put('/cancelBooking/', (req, res, next) => {
         })
     })
 });
-
 module.exports = router;
