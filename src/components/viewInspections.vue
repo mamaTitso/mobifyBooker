@@ -46,10 +46,10 @@ export default {
           inspectNo:this.inspections.inspection,
           deleted:this.route.params.client_number
         }
-      fetch("http://localhost:3000/cancelBooking/", {
-        method: "PUT",
+      fetch('http://localhost:3000/cancelBooking/', {
+        method: 'PUT',
         headers: {
-         "Content-type": "application/json; charset=UTF-8"
+         'Content-type': 'application/json; charset=UTF-8'
         },
         body: JSON.stringify(newObj)
       })

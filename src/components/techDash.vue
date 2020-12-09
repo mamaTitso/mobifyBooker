@@ -47,8 +47,8 @@
                 <td>{{car.place}}</td>
                 <td>{{car.date_requested}}</td>
                 <td>{{car.make}}<br>{{car.model}}<br>{{car.colour}}</td>
-                <td><input type="datetime-local" v-model="datetime"></td>
-                <td><button type="button" @click="approve(car.appointment_number)">APPROVE</button></td>
+                <td><input type='datetime-local' v-model="datetime"></td>
+                <td><button type='button' @click="approve(car.appointment_number)">APPROVE</button></td>
             </tr>
          </tbody>
     </table>
@@ -84,20 +84,20 @@ export default {
                 appoint_time:this.datetime,
                 technician :this.$route.params.id.user_id 
             };
-            fetch("http://localhost:3000/approveAppointments", {
-            method: "PUT",
+            fetch('http://localhost:3000/approveAppointments', {
+            method: 'PUT',
             headers: {
                 Accept: "application/json",
-                "Content-Type": "application/json"
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(appointment)
             })
         },
         inspection1(appointmentNo){
-            this.$router.push({name:'inspection', params: {id:"in",appoint:appointmentNo}})
+            this.$router.push({name:'inspection', params: {id:'in',appoint:appointmentNo}})
         },
-        inspection2(inspectionType){
-            this.$router.push({name:'inspection', params: {id:"out",appoint:appointmentNo}})
+        inspection2(appointmentNo){
+            this.$router.push({name:'inspection', params: {id:'out',appoint:appointmentNo}})
         }
     },
    mounted(){

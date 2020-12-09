@@ -47,14 +47,14 @@ export default {
         isTechnician=true;
 
       let newUser = {
-        _is_technician: this.isTechnician,
+        _is_technician: isTechnician,
         _user_id: this.user.id,
         _name: this.user.name,
         _address: this.user.address,
         _cellphone_number: this.user.number,
         _email :this.user.email
       };
-      fetch("http://localhost:3000/addNewUser", {
+      fetch("http://localhost:3000/addNewUser/", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -62,13 +62,7 @@ export default {
         },
         body: JSON.stringify(newUser)
       })
-        .then(function(res) {
-          return res.json();
-        })
-        .then(function(data) {
-            alert('You are now officially added. You can now log in');
-          
-        })
+        .then(this.$router.go(-1))
         .catch(error => {
           console.log("This is the error: ", error);
         });

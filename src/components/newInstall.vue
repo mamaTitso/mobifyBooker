@@ -10,7 +10,7 @@
     <br /><br /><label>Colour</label>
     <input type="text" placeholder="colour of the car" v-model="vehicle.colour"/>
      <br /><br /><button type="button" @click="goBack()">back</button>
-    <button type="button" @click="add(vehicle.clientNo)">Submit</button>
+    <button type="button" @click="add()">Submit</button>
   </form>
 </template>
 
@@ -29,7 +29,7 @@ export default {
     };
   },
   methods: {
-    add(userid) {
+    add() {
       debugger;
       var newObj = {
         clientNum:this.vehicle.clientNo,
@@ -38,8 +38,7 @@ export default {
         make: this.vehicle.make,
         color: this.vehicle.colour
       };
-      
-      fetch("http://localhost:3000/clientAddBooking", {
+      fetch("http://localhost:3000/addNewAppointment", {
         method: "POST",
         headers: {
           Accept: "application/json",

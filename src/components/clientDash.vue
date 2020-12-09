@@ -1,7 +1,7 @@
 <template>
 <div >
     <h1>Welcome Back {{this.$route.params.id.name}} </h1>
-    <br><button type="button" @click="bookInstallation(client)">book appointment</button>
+    <br><button type="button" @click="bookInstallation()">BOOK INSTALLATION</button>
     <br><br>
     <table id="firstTable">
         <thead>
@@ -12,7 +12,7 @@
         </thead>
         <tbody>
             <tr v-for="(car, i) in cars" :key="i">
-                <td>{{car.car_reg}}</td>
+                <td>{{car.vehicle_registration}}</td>
                 <td>{{car.make}}<br>{{car.model}}<br>{{car.colour}}</td>
             </tr>
          </tbody>
@@ -26,6 +26,7 @@
                 <th>status</th>
                 <th>date</th>
                 <th>technician</th>
+                <th>cancel</th>
             </tr>
         </thead>
         <tbody>
@@ -35,6 +36,8 @@
                 <td>{{car.app_status}}</td>
                 <td>{{car.app_date}}   
                 <td>{{car.technician}}</td>
+                <button type="button">Cancel</button>
+    
             </tr>
          </tbody>
     </table>
@@ -62,8 +65,8 @@ export default {
             .then(results=>results.json())
             .then((response)=>(this.appointments = response.user.data))
         },
-        bookInstallation(clientId){
-            this.$router.push({name:'newInstall', params: {id:clientId}})
+        bookInstallation(){
+            this.$router.push({name:'newInstall', params: {id:this.$route.params.id.user_id}})
 
         },
         bookInsepection(carId){
