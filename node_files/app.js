@@ -23,7 +23,7 @@ router.get('/getIdNumber/:userId', (req, res, next) => {
     res.header("Access-Control-Allow-Origin","*");
     res.header("Access-Control_Allow-Headers","Origin,X-Requested-With,Content-Type,Accept");
 
-    const functionName = `online_book.fn_view_all_client_vehicle(${req.params.userId})`;
+    const functionName = `online_book.fn_user_get_by_id(${req.params.userId})`;
 
         postgres.callFnWithResultsById(functionName)  
             .then((data) => {
@@ -51,7 +51,7 @@ router.get('/getUserId/:userId', (req, res, next) => {
     res.header("Access-Control-Allow-Origin","*");
     res.header("Access-Control_Allow-Headers","Origin,X-Requested-With,Content-Type,Accept");
 
-    const functionName = `online_book.fn_get_client_app (${req.params.userId})`;
+    const functionName = `online_book.fn_vehicle_get_by_id (${req.params.userId})`;
 
         postgres.callFnWithResultsById(functionName)  
             .then((data) => {
@@ -210,8 +210,8 @@ router.post('/addNewUser/', (req, res, next) => {
         })
     })
 });
-//REGISTER FILL IN INSEPECTION ========================================================================================
-router.post('/addNewUser/', (req, res, next) => {
+//FILL IN INSEPECTION ========================================================================================
+router.post('/inspectionAdd/', (req, res, next) => {
     res.header("Access-Control-Allow-Origin","*");
     res.header("Access-Control_Allow-Headers","Origin,X-Requested-With,Content-Type,Accept");
 
@@ -232,7 +232,54 @@ router.post('/addNewUser/', (req, res, next) => {
 
         placeholder = placeholder.replace(/,\s*$/, ''); 
 
-        const functionName = `online_book.fn_user_add`;
+        const functionName = `online_book.fn_inspection_new_add`;
+
+        const sql = `${functionName}(${placeholder})`;
+
+        postgres.callFnWithResultsAdd(sql, paramsValues)
+        .then((data) => {
+            debugger;
+            res.status(201).json({
+                message: 'Successfully Added user',
+                addedUser: data
+            });
+            resolve(data);
+
+        })
+        .catch((error) => {
+            debugger;
+            res.status(500).json({
+                message: 'bad Request',
+                error: error,
+                status: false
+            });
+            reject(error);
+        })
+    })
+});
+//POST A NEW INSTALLATION===========================================================================
+router.post('/addNewAppointment/', (req, res, next) => {
+    res.header("Access-Control-Allow-Origin","*");
+    res.header("Access-Control_Allow-Headers","Origin,X-Requested-With,Content-Type,Accept");
+
+    debugger;
+    return new Promise((resolve, reject) => {
+        let placeholder = '';
+        let count = 1;
+        const params = Object.keys(req.body).map(key => [(key), req.body[key]]);
+
+        const paramsValues = Object.keys(req.body).map(key => req.body[key]);
+
+        if (Array.isArray(params)) {
+            params.forEach(() => {
+                placeholder += `$${count},`;
+                count += 1;
+            });
+        } 
+
+        placeholder = placeholder.replace(/,\s*$/, ''); 
+
+        const functionName = `online_book.fn_appointment_new_add`;
 
         const sql = `${functionName}(${placeholder})`;
 
